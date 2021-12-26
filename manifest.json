@@ -1,12 +1,23 @@
 {
-  "name":"Off Screen Tabs Demo",
-  "description":"This demonstrates Off Screen Tabs API",
-  "manifest_version":2,
-  "version":"1",
-  "permissions":["tabs","<all_urls>"],
-  "browser_action":{
-    "default_popup":"popup.html"
+  "name": "Page Redder",
+  "action": {},
+  "manifest_version": 3,
+  "version": "0.1",
+  "description": "Turns the page red when you click the icon",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "js-loader.js"
   },
-  "web_accessible_resources": ["LeoScript.js","popup.html"] ,
-  "permissions":["tabs","<all_urls>"]
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["drawer.css"],
+      "run_at": "document_end",
+      "js": ["drawer.js"]
+    }
+  ]
 }
