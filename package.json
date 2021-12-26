@@ -11,5 +11,8 @@
     "url": "["
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "side-drawer": "^2.3.0"
+  }
 }
