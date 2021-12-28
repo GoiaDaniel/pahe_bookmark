@@ -60,34 +60,67 @@ const storageResponseExample = [
 ];
 function createWatchedEpisodesList(element,episodes){
   let row = document.createElement('div');
-  row.style.display='block';
+  row.className='content'
   episodes.forEach( episode =>{
     let pElement = document.createElement('a');
     pElement.innerText = episode
+    pElement.style.display='inline'
     pElement.href = 'www.google.com'
     row.appendChild(pElement);
   })
   element.appendChild(row)
 }
 
-function createSideNavMenu(sideNav,storageResponseExample){
+
+
+function  createSideNavMenu(sideNav,storageResponseExample){
   const sideNavMenu = document.createElement('a')
-  sideNavMenu.innerText = 'TEST'
-  sideNavMenu.onclick = sendMessage
+  sideNavMenu.innerText = 'Bookmarks'
   sideNav.appendChild(sideNavMenu)
 
   storageResponseExample.forEach( title =>{
-    let element = document.createElement('a');
-    element.innerText = title.title;
-    element.href = title.url;
+    let element = document.createElement('div');
+    element.className='titleRow';
+    let button = document.createElement('button');
+    button.className='collapsible';
+    button.innerText=title.title;
+    button.addEventListener('click', function(){
+      button.classList.toggle('active');
+      let content = button.nextSibling;
+      if (content.style.maxHeight){
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+      console.log('content',content, button,element);
+    });
+    element.appendChild(button)
     createWatchedEpisodesList(element,title.watchedEpisodes);
+
 
     sideNav.appendChild(element)
 
   });
 
-}
 
+
+}
+function addButtonToggle(){
+  let coll = document.getElementsByClassName("collapsible");
+  console.log('coll', coll);
+  for (let i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      let content = this.nextElementSibling;
+      console.log('content',content);
+      if (content.style.maxHeight){
+        content.style.maxHeight = null;
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
+  }
+}
 createSideNav(storageResponseExample);
 
 openButton()

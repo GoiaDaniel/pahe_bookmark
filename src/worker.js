@@ -17,7 +17,7 @@ async function getCurrentTab() {
   return tab;
 }
 
-chrome.runtime.onMessage.addEaddListener(async function(msg, sender, sendResponse){
+chrome.runtime.onMessage.addListener(async function(msg, sender, sendResponse){
   console.log(` >> ${msg}`)
   const method = msg.method
   const path = msg.path
