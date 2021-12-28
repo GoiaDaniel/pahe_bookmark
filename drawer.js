@@ -1,3 +1,5 @@
+
+
 //Create the Side nav element
 function createSideNav(storageResponseExample){
   const sideNav = document.createElement('div')
@@ -86,23 +88,17 @@ function createSideNavMenu(sideNav,storageResponseExample){
 
 }
 
-
 createSideNav(storageResponseExample);
 
 openButton()
 
+function loadTitles(){
+  return request({ method: 'get', path: '/tiles'})
+}
 
-
-
-console.log(document.body)
-
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-
-  console.log(request)
-  sendResponse(`OK`)
-
-});
+function saveTitle(title){
+  return request({ method: 'post', path: '/tiles', attributes: [title]})
+}
 
 /* Set the width of the side navigation to 250px */
 function openNav() {
@@ -116,12 +112,17 @@ function closeNav() {
   document.getElementById('openSideNavButton').style.opacity = '1';
 }
 
-
-
-function sendMessage(){
-  chrome.runtime.sendMessage("TEST", function(response) {
-    console.log(response);
-  });
+/* Load data from the extension */
+function request(message){
+  return new Promise(res => {
+    chrome.runtime.sendMessage(message, function(response) {
+      res(response)
+    });
+  })
 }
 
-sendMessage();
+/* Receive message from the extension */
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+  console.log(request)
+  sendResponse(`OK`)
+});

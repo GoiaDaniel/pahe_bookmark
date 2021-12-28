@@ -17,31 +17,50 @@ async function getCurrentTab() {
   return tab;
 }
 
-chrome.runtime.onMessage.addListener(async function(msg, sender){
-  console.log(`EXTENSION`, msg)
-  const titles = await get('titles')
-  console.log(titles)
-  const tab = getCurrentTab();
-  console.log('Url: ',tab);
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    console.log(`Sending message to content script`)
-    chrome.tabs.sendMessage(tabs[0].id, titles, function(response) {
-      console.log(`EXTENSION 2`, response);
-    });
-  });
+chrome.runtime.onMessage.addEaddListener(async function(msg, sender, sendResponse){
+  console.log(` >> ${msg}`)
+  const method = msg.method
+  const path = msg.path
+  const attributes = msg.attributes
+
+  switch(path){
+    case "/tiles": {
+      switch(method) {
+        case "get": {
+          const titles = await get('titles')
+          sendResponse(titles)
+          break;
+        }
+        case "post": {
+          const currentTitles = await get('titles')
+          const updatedTitleList = currentTitles.concat(attributes)
+          await set('titles', updatedTitleList)
+          break;
+        }
+      }
+
+      break;
+    }
+    default: {
+      console.error(`Path not defined`)
+    }
+  }
+
 
 })
+
+async function sendToCurrentPage(message){
+  const tab = await getCurrentTab()
+  return new Promise(res => {
+    chrome.tabs.sendMessage(tab.id, message, function (response) {
+      res(response)
+    });
+  });
+}
 
 chrome.action.onClicked.addListener((tab) => {
   set('current_page', tab.url)
   console.log(tab)
-
-/*  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    function: openDrawer
-  });*/
-
-
   get('key').then(res =>{
     console.log('key?: ' ,res);
   })
