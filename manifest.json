@@ -5,6 +5,7 @@
   "version": "0.1",
   "description": "Turns the page red when you click the icon",
   "permissions": [
+    "tabs",
     "storage",
     "activeTab",
     "scripting"

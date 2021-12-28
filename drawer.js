@@ -1,11 +1,11 @@
 
 
 //Create the Side nav element
-function createSideNav(storageResponseExample){
+function createSideNav(payload){
   const sideNav = document.createElement('div')
   sideNav.id = 'mySidenav'
   sideNav.className = 'sidenav'
-  createSideNavMenu(sideNav,storageResponseExample);
+  createSideNavMenu(sideNav,payload);
   closeButton(sideNav);
   document.body.append(sideNav);
 }
@@ -27,6 +27,16 @@ function openButton(){
   document.body.append(openSideNavButton)
 }
 
+//Create open button for the sidenav
+function bookmarkButton(){
+  const bookmarkAnimeButton = document.createElement('span')
+  bookmarkAnimeButton.id='bookmarkAnimeButton'
+  bookmarkAnimeButton.innerText = 'BOOKMARK'
+  bookmarkAnimeButton.className = 'side-nav-bookmark-btn'
+  bookmarkAnimeButton.onclick = bookmarkAnime
+  document.body.append(bookmarkAnimeButton)
+}
+
 
 /*
 <div id="mySidenav" class="sidenav">
@@ -46,18 +56,7 @@ function openButton(){
 </div>
  */
 
-const storageResponseExample = [
-  {
-    title: 'jobless',
-    url: 'www.google.com',
-    watchedEpisodes : [1,2,3]
-  },
-  {
-    title: 'attack on titan',
-    url: 'www.google.com',
-    watchedEpisodes : [1,2,4]
-  }
-];
+
 function createWatchedEpisodesList(element,episodes){
   let row = document.createElement('div');
   row.className='content'
@@ -73,12 +72,12 @@ function createWatchedEpisodesList(element,episodes){
 
 
 
-function  createSideNavMenu(sideNav,storageResponseExample){
+function createSideNavMenu(sideNav,payload){
   const sideNavMenu = document.createElement('a')
   sideNavMenu.innerText = 'Bookmarks'
   sideNav.appendChild(sideNavMenu)
 
-  storageResponseExample.forEach( title =>{
+  payload.forEach( title =>{
     let element = document.createElement('div');
     element.className='titleRow';
     let button = document.createElement('button');
@@ -121,16 +120,16 @@ function addButtonToggle(){
     });
   }
 }
-createSideNav(storageResponseExample);
+loadTitles().then(resp => {
+  console.log(resp)
+  createSideNav(resp)
+});
 
 openButton()
+bookmarkButton()
 
 function loadTitles(){
-  return request({ method: 'get', path: '/tiles'})
-}
-
-function saveTitle(title){
-  return request({ method: 'post', path: '/tiles', attributes: [title]})
+  return request({ method: 'get', path: '/titles'})
 }
 
 /* Set the width of the side navigation to 250px */
@@ -145,10 +144,16 @@ function closeNav() {
   document.getElementById('openSideNavButton').style.opacity = '1';
 }
 
+async function bookmarkAnime() {
+  await request({ method: 'post', path: '/bookmark'})
+}
+
 /* Load data from the extension */
 function request(message){
   return new Promise(function (res) {
+    console.log(`>>`, message)
     chrome.runtime.sendMessage(message, function(response) {
+      console.log(`<<`, response)
       res(response)
     });
   })
