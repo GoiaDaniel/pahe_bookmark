@@ -51,28 +51,6 @@ chrome.runtime.onMessage.addListener(async function(msg, sender, sendResponse){
     }
   }
 })
-/*
-active: true
-audible: false
-autoDiscardable: true
-discarded: false
-favIconUrl: "https://animepahe.com/pikacon.ico"
-groupId: -1
-height: 939
-highlighted: true
-id: 31
-incognito: false
-index: 4
-mutedInfo: {muted: false}
-pinned: false
-selected: true
-status: "complete"
-title: "Kaginado Ep. 1-12 [Completed] :: animepahe"
-url: "https://animepahe.com/anime/d8b9bba0-6fd9-7898-44de-25bd87fb9244"
-width: 1329
-windowId: 26
- */
-
 
 async function saveTitle(currentTab) {
   const newTitle = {
